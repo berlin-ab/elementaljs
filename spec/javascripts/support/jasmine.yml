@@ -11,8 +11,8 @@
 #   - dist/**/*.js
 #
 src_files:
-    - src/*.js
-    - src/behaviors/*.js
+    - src/*js
+    - src/behaviors/*js
 
 # stylesheets
 #
@@ -38,6 +38,7 @@ stylesheets:
 #   - helpers/**/*.js
 #
 helpers:
+  - 'helpers/**/*.js'
 
 # spec_files
 #
@@ -50,6 +51,7 @@ helpers:
 #   - **/*[sS]pec.js
 #
 spec_files:
+  - '**/*[sS]pec.js'
 
 # src_dir
 #
@@ -72,3 +74,17 @@ src_dir:
 # spec_dir: spec/javascripts
 #
 spec_dir: spec
+
+# spec_helper
+#
+# Ruby file that Jasmine server will require before starting.
+# Returned relative to your root path
+# Default spec/support/jasmine_helper.rb
+#
+# EXAMPLE:
+#
+# spec_helper: spec/support/jasmine_helper.rb
+#
+spec_helper: spec/support/jasmine_helper.rb
+
+
