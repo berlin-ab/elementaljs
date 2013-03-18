@@ -10,33 +10,47 @@
 
     var namespaces = [root];
 
+    function findBehaviors(behaviorAsNamespaces){
+        return jQuery.map(namespaces, function(namespace, index){
+            return _.reduce(behaviorAsNamespaces, function(prev, next){
+                return prev[next];
+            }, namespace);
+        });
+    }
+
+    function findFirstBehavior(fns){
+        return _.find(fns, function(fn){
+            return undefined !== fn;
+        });
+    }
+
+    function callEachBehavior(element, behavior){
+        var behaviorWithNamespaces = behavior.split(".");
+        var behaviors = findBehaviors(behaviorWithNamespaces);
+        var behavior = findFirstBehavior(behaviors);
+        if (undefined !== behavior) {
+            behavior(element);
+        }
+    }
+
+    function initializeBehaviorForElement(element){
+        var behaviors = element.attr('data-behavior');
+        jQuery.each(behaviors.split(" "), function(index, behavior){
+          callEachBehavior(element, behavior);
+        });
+    }
+
+    function elementsWithDefinedBehaviors(scope){
+        return $(scope).find("*").andSelf().filter("[data-behavior]");
+    }
+
     Elemental.load = function(element){
-        var container = $(element);
-        container.find("*").andSelf().filter("[data-behavior]").each(function(index, element){
-            var that = $(element);
-            var behaviors = that.attr('data-behavior');
-            _.each(behaviors.split(" "), function(behavior){
-                var namespaced = behavior.split(".");
-
-                var fns = _.map(namespaces, function(namespace){
-                    return _.reduce(namespaced, function(prev, next){
-                        return prev[next];
-                    }, namespace);
-                });
-
-                var fn = _.find(fns, function(fn){
-                    return undefined !== fn;
-                });
-
-                if (undefined !== fn) {
-                    fn(that);
-                }
-            });
+        elementsWithDefinedBehaviors(element).each(function(index, thisElement){
+            initializeBehaviorForElement($(thisElement));
         });
     };
 
     Elemental.addNamespace = function(namespace){
         namespaces.push(namespace);
     };
-
 })();
